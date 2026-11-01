@@ -1,0 +1,56 @@
+ROZGAR JOBS - iPHONE PAR bilkul FREE INSTALL karne ka tareeka
+=============================================================
+Paisa: Rs 0. Apple Developer account NAHI chahiye.
+
+PEHLE SAMJHO (2 baatein):
+1. iPhone par Android wali APK file kabhi nahi chalti. iPhone ki apni
+   file hoti hai - IPA. Hamari app ki IPA hum GitHub ke FREE Mac
+   computer se banayenge.
+2. Free Apple ID se lagi app 7 din me band ho jati hai. Iska ilaaj hai
+   SideStore app - wo WiFi par khud hi chup-chaap dobara sign kar deti
+   hai, tumhe kuch nahi karna padta. Ek baar me zyada se zyada 3 aisi
+   apps reh sakti hain (SideStore khud bhi unme se ek hai).
+
+STEP 1 - GitHub par free account (Deepak, sirf ek baar)
+  - github.com par apne email se free account banao.
+  - Ek naya repository banao. Is project folder (ios-cap) ki saari
+    files usme daal do (.github folder sahit).
+  - Repository PUBLIC rakhna to Mac wale minutes zyada free milte
+    hain. Hamare code me koi password/secret nahi hai, sirf demo
+    jobs hain - public rakhna surakshit hai. PRIVATE rakhna hai to
+    bhi chalega, bas free minutes kam milenge (test ke liye kaafi).
+
+STEP 2 - IPA banana (har naye version par)
+  - GitHub repo me "Actions" tab kholo.
+  - "Build iPhone App (Free)" chuno -> "Run workflow" dabao.
+  - Kuch minutes rukho. Khatam hone par neeche "Artifacts" me
+    "RozgarJobs-iPhone-IPA" milega - download kar lo. Iske andar
+    RozgarJobs-unsigned.ipa hai.
+
+STEP 3 - iPhone par SideStore lagana (sirf pehli baar, computer lagega)
+  - SideStore ki official site: sidestore.io - wahi se guide follow
+    karo. Pehli baar setup me ek computer (Windows/Mac) ek baar
+    lagega aur ek chhoti "pairing file" banegi.
+  - iPhone par LocalDevVPN app bhi lagegi (SideStore ki guide me
+    batayi hai) - ye refresh ke liye chahiye.
+  - Apni aam (free) Apple ID se hi login hoga, koi paisa nahi.
+
+STEP 4 - Hamari app install karna
+  - RozgarJobs-unsigned.ipa file ko iPhone par le jao (AirDrop,
+    iCloud Drive, ya SideStore ke andar se chuno).
+  - SideStore kholo -> My Apps -> "+" -> IPA file chuno.
+  - SideStore use tumhari Apple ID se sign karke install kar dega.
+  - Pehli baar kholne par iPhone pucche to Settings > General >
+    VPN & Device Management me jaakar apni Apple ID ko "Trust"
+    kar dena, aur Developer Mode maange to ON kar dena.
+
+STEP 5 - Bas! Ab kuch nahi karna
+  - Rozgar Jobs tumhare iPhone ki Home Screen par asli app ki tarah
+    chalegi.
+  - 7 din wala refresh SideStore WiFi par khud karta rahega
+    (LocalDevVPN on rakhna). Kabhi app band mile to SideStore khol
+    kar "Refresh All" daba dena - data saaf nahi hota.
+
+NOTE: Ye tareeka TESTING aur apne logo tak app pahuchane ke liye
+hai. Play Store jaisa sabke liye public karna hoga to aage chal kar
+Apple Developer wala raasta hi lagega - wo faisla baad ka hai.
