@@ -1,0 +1,50 @@
+name: App Ka Live Link
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Code lena
+        uses: actions/checkout@v4
+
+      - name: Icons banana (base64 se asli PNG)
+        run: bash scripts/gen-icons.sh
+
+      - name: Site taiyaar karna
+        run: |
+          mkdir -p site
+          cp www/index.html site/
+          cp www/manifest.webmanifest site/
+          cp www/sw.js site/
+          cp www/icon-192.png site/
+          cp www/icon-512.png site/
+          cp www/apple-touch-icon.png site/
+
+      - name: Pages taiyaar karna
+        uses: actions/configure-pages@v5
+
+      - name: Site upload karna
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Live karna
+        id: deployment
+        uses: actions/deploy-pages@v4
