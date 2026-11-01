@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rozgar Jobs</title>
+<meta name="theme-color" content="#0d2160">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rozgar Jobs">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>
+:root{--navy:#0d2160;--blue:#1450e0;--green:#1da851;--greenbg:#e6f7ec;--grey:#6b7280;--line:#e5e7eb;--bg:#ffffff;--chip:#f1f4fb;--orange:#d97706;--orangebg:#fef3c7;--red:#c0392b}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,'Segoe UI',Roboto,'Noto Sans',sans-serif;background:var(--bg);color:#111827;padding-bottom:74px}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit;font-size:15px}
+/* header */
+.header{position:sticky;top:0;background:#fff;z-index:50;padding:12px 16px 8px;border-bottom:1px solid var(--line)}
+.logo-row{display:flex;align-items:center;gap:9px}
+.logo{width:38px;height:38px;border-radius:9px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:21px}
+.appname{font-size:24px;font-weight:800;color:var(--navy);flex:1}
+.bell{font-size:22px;position:relative}
+.searchbar{margin-top:11px;display:flex;align-items:center;gap:8px;background:#f6f7fb;border:1.5px solid var(--line);border-radius:12px;padding:11px 13px}
+.searchbar input{border:none;outline:none;background:none;flex:1;font-size:15px;color:#111827}
+.tabs{margin-top:11px;display:flex;background:#eef1f7;border-radius:999px;padding:4px}
+.tab{flex:1;text-align:center;padding:10px 0;border-radius:999px;font-weight:800;font-size:14.5px;color:#5b6474;letter-spacing:.3px}
+.tab.on{background:var(--blue);color:#fff}
+.cats{display:flex;gap:13px;overflow-x:auto;padding:13px 2px 4px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:56px}
+.cat .ic{width:48px;height:48px;border-radius:50%;background:#eceff5;display:flex;align-items:center;justify-content:center;font-size:21px}
+.cat span{font-size:11.5px;color:#374151;font-weight:600;text-align:center}
+.cat.on .ic{background:var(--blue)}
+.cat.on span{color:var(--blue)}
+.filters{display:flex;gap:8px;margin-top:9px;align-items:center}
+.filters select{flex:1;padding:9px 10px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:#111827;font-weight:600}
+.fchip{padding:9px 12px;border-radius:999px;background:var(--chip);font-weight:700;font-size:13px;color:#374151;white-space:nowrap;border:1.5px solid transparent}
+.fchip.on{background:var(--greenbg);color:var(--green);border-color:var(--green)}
+/* feed */
+.feedhead{display:flex;align-items:baseline;justify-content:space-between;padding:15px 16px 4px}
+.feedhead h2{font-size:20px;color:var(--navy);font-weight:800}
+.feedhead .cnt{font-size:13px;color:var(--green);font-weight:700}
+.feed{padding:6px 14px 10px;display:flex;flex-direction:column;gap:12px}
+.card{border:1.5px solid var(--line);border-radius:16px;padding:14px 15px;background:#fff;box-shadow:0 1px 4px rgba(13,33,96,.05);position:relative}
+.card:active{border-color:var(--blue)}
+.card h3{font-size:18.5px;color:var(--navy);font-weight:800;padding-right:34px}
+.comp{color:#374151;font-size:14px;margin-top:2px}
+.loc{color:#4b5563;font-size:14px;margin-top:5px}
+.sal{color:var(--green);font-weight:800;font-size:16px;margin-top:6px}
+.meta{display:flex;gap:15px;color:var(--grey);font-size:13px;margin-top:7px;flex-wrap:wrap}
+.badges{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.bdg{font-size:12.5px;font-weight:800;padding:5px 10px;border-radius:999px}
+.bdg.g{background:var(--greenbg);color:var(--green)}
+.bdg.b{background:#e3ebfd;color:var(--blue)}
+.bdg.o{background:var(--orangebg);color:var(--orange)}
+.bdg.gr{background:#eef0f3;color:#5b6474}
+.bdg.r{background:#fdecea;color:var(--red)}
+.save{position:absolute;top:11px;right:12px;font-size:21px;color:#9ca3af;padding:4px}
+.save.on{color:var(--blue)}
+.empty{text-align:center;color:var(--grey);padding:44px 20px;font-size:15px;line-height:1.6}
+/* bottom nav */
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;z-index:60}
+.nav button{flex:1;padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:700;color:#8a93a5}
+.nav button .ni{font-size:21px}
+.nav button.on{color:var(--blue)}
+/* views */
+.view{display:none}.view.on{display:block}
+.topbar{position:sticky;top:0;background:#fff;z-index:50;display:flex;align-items:center;gap:8px;padding:13px 14px;border-bottom:1px solid var(--line)}
+.topbar .back{font-size:23px;color:var(--navy);padding:2px 6px}
+.topbar h2{font-size:19px;color:var(--navy);font-weight:800}
+.detail{padding:16px}
+.detail h1{font-size:25px;color:var(--navy);font-weight:800;line-height:1.25}
+.salbox{background:var(--greenbg);border:1.5px solid var(--green);border-radius:13px;padding:13px 15px;margin-top:13px}
+.salbox .s{font-size:21px;font-weight:800;color:var(--green)}
+.salbox .t{font-size:13.5px;color:#065f46;margin-top:2px}
+h4.sec{color:var(--navy);font-size:18px;margin:19px 0 9px;font-weight:800}
+.rows{border:1.5px solid var(--line);border-radius:13px;overflow:hidden}
+.row{display:flex;justify-content:space-between;gap:14px;padding:11.5px 14px;border-bottom:1px solid var(--line);font-size:14.5px}
+.row:last-child{border-bottom:none}
+.row .k{color:#4b5563}.row .v{font-weight:700;text-align:right;color:#111827}
+.row .v.yes{color:var(--green)}.row .v.warn{color:var(--orange)}
+.desc{font-size:15px;line-height:1.65;color:#1f2937}
+.warnstrip{background:var(--orangebg);color:#92400e;font-weight:700;font-size:14px;border-radius:11px;padding:12px 14px;margin-top:16px;line-height:1.5}
+.contactbox{background:var(--chip);border-radius:11px;padding:12px 14px;margin-top:12px;font-size:14.5px;line-height:1.7}
+.contactbox a{color:var(--blue);font-weight:700;text-decoration:none;word-break:break-all}
+.applybar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:11px 14px;z-index:60}
+.bigbtn{display:block;width:100%;background:var(--green);color:#fff;font-size:17.5px;font-weight:800;padding:15px;border-radius:13px;text-align:center}
+.bigbtn.blue{background:var(--blue)}
+/* forms */
+.form{padding:16px;display:flex;flex-direction:column;gap:13px}
+.jobmini{border:1.5px solid var(--line);border-radius:13px;padding:12px 14px}
+.jobmini b{color:var(--navy);font-size:16.5px}
+.jobmini div{color:#4b5563;font-size:13.5px;margin-top:2px}
+label.fl{font-size:14.5px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px}
+.inp{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:12px 13px;outline:none;background:#fff;color:#111827}
+.inp:focus{border-color:var(--blue)}
+textarea.inp{min-height:74px;resize:vertical}
+.upload{border:2px dashed var(--blue);border-radius:12px;padding:18px;text-align:center;color:var(--blue);font-weight:700;background:#f5f8ff}
+.upload small{display:block;color:var(--grey);font-weight:500;margin-top:4px}
+.note{font-size:13px;color:var(--grey);line-height:1.55}
+.success{padding:56px 26px;text-align:center}
+.success .tick{width:86px;height:86px;border-radius:50%;background:var(--greenbg);color:var(--green);font-size:44px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.success h2{color:var(--navy);font-size:23px;margin-bottom:9px}
+.success p{color:#4b5563;line-height:1.6;font-size:15px}
+.success .bigbtn{margin-top:24px}
+.applist{padding:14px;display:flex;flex-direction:column;gap:11px}
+.appitem{border:1.5px solid var(--line);border-radius:13px;padding:12px 14px;font-size:14.5px;line-height:1.6}
+.appitem b{color:var(--navy)}
+.del{color:var(--red);font-weight:700;font-size:13px;float:right}
+.about{padding:16px;font-size:15px;line-height:1.7;color:#1f2937}
+.about h3{color:var(--navy);margin:14px 0 6px}
+.mbtn{display:block;width:100%;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:14px 15px;font-size:15.5px;font-weight:700;color:var(--navy);margin-bottom:10px}
+</style>
+</head>
+<body>
+<!-- HOME -->
+<div class="view on" id="v-home">
+  <div class="header">
+    <div class="logo-row"><div class="logo">💼</div><div class="appname">Rozgar Jobs</div><div class="bell">🔔</div></div>
+    <div class="searchbar">🔍<input id="q" type="text" placeholder="Search job, company, country..."></div>
+    <div class="tabs"><button class="tab" id="tab-india">INDIA JOBS</button><button class="tab on" id="tab-abroad">ABROAD JOBS</button></div>
+    <div class="cats" id="cats"></div>
+    <div class="filters">
+      <select id="placeSel"></select>
+      <button class="fchip" id="visaChip">✓ Visa Help Only</button>
+    </div>
+  </div>
+  <div class="feedhead"><h2 id="feedTitle">Latest Jobs</h2><div class="cnt" id="feedCnt"></div></div>
+  <div class="feed" id="feed"></div>
+</div>
+
+<!-- SAVED -->
+<div class="view" id="v-saved">
+  <div class="topbar"><h2>🔖 Saved Jobs</h2></div>
+  <div class="feed" id="savedFeed" style="padding-top:12px"></div>
+</div>
+
+<!-- DETAIL -->
+<div class="view" id="v-detail">
+  <div class="topbar"><button class="back" data-go="home">←</button><h2>Job Details</h2></div>
+  <div class="detail" id="detailBody"></div>
+  <div style="height:78px"></div>
+  <div class="applybar" id="applyBar"></div>
+</div>
+
+<!-- APPLY FORM -->
+<div class="view" id="v-apply">
+  <div class="topbar"><button class="back" data-go="detail">←</button><h2>Apply for Job</h2></div>
+  <form class="form" id="applyForm">
+    <div class="jobmini" id="applyJobMini"></div>
+    <div><label class="fl">Full Name</label><input class="inp" id="af-name" required placeholder="Enter your full name"></div>
+    <div><label class="fl">Mobile Number</label><input class="inp" id="af-mobile" required type="tel" placeholder="Enter your mobile number"></div>
+    <div><label class="fl">Your City</label><input class="inp" id="af-city" required placeholder="e.g. Karnal, Delhi"></div>
+    <div><label class="fl">Experience</label><select class="inp" id="af-exp"><option>Fresher</option><option>1-2 years</option><option>3-5 years</option><option>5+ years</option></select></div>
+    <div><label class="fl">Upload Resume</label><div class="upload" id="af-upload">☁️ Tap to upload your resume<small>PDF / DOC — test version me sirf file ka naam save hoga</small></div><input type="file" id="af-file" accept=".pdf,.doc,.docx" style="display:none"><div class="note" id="af-filename"></div></div>
+    <p class="note">Submit karne par tumhari application is test app me save ho jayegi — "My Apply" me dikhegi.</p>
+    <button class="bigbtn blue" type="submit">SUBMIT APPLICATION</button>
+  </form>
+</div>
+
+<!-- SUCCESS -->
+<div class="view" id="v-success">
+  <div class="success"><div class="tick">✓</div><h2>Application Bhej Di Gayi!</h2><p id="successText"></p><button class="bigbtn" data-go="home">Home par wapas jao</button></div>
+</div>
+
+<!-- MY APPLY -->
+<div class="view" id="v-myapply">
+  <div class="topbar"><h2>📋 My Applications</h2></div>
+  <div class="applist" id="applyList"></div>
+</div>
+
+<!-- MORE -->
+<div class="view" id="v-more">
+  <div class="topbar"><h2>More</h2></div>
+  <div class="about">
+    <button class="mbtn" id="goAddJob">➕ Admin — Nayi Job Dalna</button>
+    <button class="mbtn" id="goReceived">📥 Aayi Hui Applications (Admin)</button>
+    <button class="mbtn" id="resetDemo">↺ Test Data Reset Karna</button>
+    <h3>Is App Ke Baare Me</h3>
+    <p>Ye <b>TEST version</b> hai. Isme dikh rahi jobs abhi <b>demo/test jobs</b> hain — layout aur working check karne ke liye. Asli jobs hum khud dhundh kar Admin se dalenge.</p>
+    <h3>App Ka Kaam</h3>
+    <p>India (Haryana, Delhi, Chandigarh, UP, Punjab) aur duniya bhar ki jobs — har job ke saath salary, last date, apply fee aur work permit / visa help ki saaf jaankari. Koi login nahi (testing version).</p>
+    <h3>⚠️ Savdhaan</h3>
+    <p>Bina check kiye kisi agent ko fee mat do. Fee mangne wali job par pehle poori jaanch karo.</p>
+  </div>
+</div>
+
+<!-- ADD JOB (ADMIN) -->
+<div class="view" id="v-addjob">
+  <div class="topbar"><button class="back" data-go="more">←</button><h2>Admin — Nayi Job Dalo</h2></div>
+  <form class="form" id="addForm">
+    <div><label class="fl">Job Kahan Ki Hai?</label><select class="inp" id="aj-region"><option value="abroad">Abroad (Bahar ki job)</option><option value="india">India ki job</option></select></div>
+    <div><label class="fl">Job Title</label><input class="inp" id="aj-title" required placeholder="e.g. Warehouse Worker"></div>
+    <div><label class="fl">Company / Employer</label><input class="inp" id="aj-company" required placeholder="Company ka naam"></div>
+    <div><label class="fl">Category</label><select class="inp" id="aj-cat"></select></div>
+    <div><label class="fl">City</label><input class="inp" id="aj-city" required placeholder="e.g. Berlin / Karnal"></div>
+    <div><label class="fl">Country (Abroad) ya State (India)</label><input class="inp" id="aj-place" required placeholder="e.g. Germany / Haryana"></div>
+    <div><label class="fl">Salary</label><input class="inp" id="aj-salary" placeholder="e.g. €2,200 / month (na ho to khaali chhodo)"></div>
+    <div><label class="fl">Apply Ki Last Date</label><input class="inp" id="aj-last" placeholder="e.g. 20 Nov 2026"></div>
+    <div><label class="fl">Apply Fee</label><input class="inp" id="aj-fee" placeholder="Na ho to khaali chhodo, ho to e.g. ₹5,000 Agency Fee"></div>
+    <div><label class="fl">Work Permit / Visa Help</label><select class="inp" id="aj-permit"><option value="notmentioned">Post me likha nahi</option><option value="yes">YES — help milegi</option><option value="no">NO — help nahi milegi</option></select></div>
+    <div><label class="fl">Contact (Email / WhatsApp / Link)</label><input class="inp" id="aj-contact" placeholder="Jo asli post me diya ho"></div>
+    <div><label class="fl">Kaam Ki Detail (Description)</label><textarea class="inp" id="aj-desc" placeholder="Kaam kya karna hai, rehna-khana, experience aadi"></textarea></div>
+    <button class="bigbtn blue" type="submit">JOB ADD KARO</button>
+    <div style="height:4px"></div>
+    <h4 class="sec">Dali Hui Jobs (Admin)</h4>
+    <div class="applist" id="adminJobList" style="padding:0"></div>
+  </form>
+</div>
+
+<!-- RECEIVED APPLICATIONS (ADMIN) -->
+<div class="view" id="v-received">
+  <div class="topbar"><button class="back" data-go="more">←</button><h2>Aayi Hui Applications</h2></div>
+  <div class="applist" id="receivedList"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="nav" id="bottomNav">
+  <button data-nav="home" class="on"><span class="ni">🏠</span>Home</button>
+  <button data-nav="saved"><span class="ni">🔖</span>Saved</button>
+  <button data-nav="myapply"><span class="ni">📋</span>My Apply</button>
+  <button data-nav="more"><span class="ni">☰</span>More</button>
+</div>
+<script>
+var CATS=[
+ {id:'all',name:'All',icon:'🌐'},
+ {id:'warehouse',name:'Warehouse',icon:'📦'},
+ {id:'it',name:'IT',icon:'💻'},
+ {id:'hotel',name:'Hotel',icon:'🏨'},
+ {id:'factory',name:'Factory',icon:'🏭'},
+ {id:'nurse',name:'Nurse',icon:'🩺'},
+ {id:'driver',name:'Driver',icon:'🚗'},
+ {id:'cleaner',name:'Cleaner',icon:'🧹'},
+ {id:'office',name:'Office',icon:'🗂️'},
+ {id:'sales',name:'Sales',icon:'🤝'},
+ {id:'delivery',name:'Delivery',icon:'🛵'}
+];
+var SEED=[
+ {id:'s1',region:'abroad',title:'Warehouse Worker',company:'LogiHub Warehousing GmbH',cat:'warehouse',city:'Berlin',place:'Germany',salary:'€2,200 / month',posted:'2h ago',last:'20 Nov 2026',fee:'',permit:'yes',visa:'Help Available',accom:'Provided',food:'Not provided',exp:'Not required',lang:'Basic English',qual:'Koi khaas nahi',desc:'Bade warehouse me samaan uthana, packing aur scanning ka kaam. Day shift, hafte me 5 din.',contact:'Email: jobs@logihub-demo.example',demo:1},
+ {id:'s2',region:'abroad',title:'Hotel Waiter',company:'Skyline Hospitality',cat:'hotel',city:'Dubai',place:'UAE',salary:'AED 3,500 / month',posted:'5h ago',last:'18 Nov 2026',fee:'',permit:'yes',visa:'Company degi',accom:'Provided',food:'Provided',exp:'1 year hotel',lang:'Basic English',qual:'10th pass',desc:'Hotel restaurant me guest ko khana serve karna aur table safai.',contact:'WhatsApp: demo number (test)',demo:1},
+ {id:'s3',region:'abroad',title:'Factory Helper',company:'NordTech Manufacturing',cat:'factory',city:'Warsaw',place:'Poland',salary:'zł 4,500 / month',posted:'1d ago',last:'25 Nov 2026',fee:'',permit:'notmentioned',visa:'Post me likha nahi',accom:'Provided',food:'Not provided',exp:'Not required',lang:'Hindi chalegi',qual:'Koi khaas nahi',desc:'Factory line par machine ki madad aur packing ka kaam.',contact:'',demo:1},
+ {id:'s4',region:'abroad',title:'Warehouse Picker',company:'GXO Logistics',cat:'warehouse',city:'Amsterdam',place:'Netherlands',salary:'€2,300 / month',posted:'1d ago',last:'22 Nov 2026',fee:'',permit:'yes',visa:'Help Available',accom:'Not provided',food:'Not provided',exp:'Not required',lang:'Basic English',qual:'Koi khaas nahi',desc:'Scanner se order pick karna aur parcel taiyaar karna.',contact:'Website: demo link (test)',demo:1},
+ {id:'s5',region:'abroad',title:'Nurse Assistant',company:'CarePlus Hospital',cat:'nurse',city:'Toronto',place:'Canada',salary:'CAD 3,200 / month',posted:'2d ago',last:'30 Nov 2026',fee:'',permit:'notmentioned',visa:'Post me likha nahi',accom:'Not provided',food:'Not provided',exp:'2 years hospital',lang:'English zaroori',qual:'Nursing course',desc:'Hospital me nurse ki madad, mareez ki dekhbhal me support.',contact:'',demo:1},
+ {id:'s6',region:'abroad',title:'Delivery Driver',company:'Desert Logistics',cat:'driver',city:'Riyadh',place:'Saudi Arabia',salary:'SAR 2,800 / month',posted:'2d ago',last:'28 Nov 2026',fee:'',permit:'yes',visa:'Company degi',accom:'Provided',food:'Provided',exp:'Driving licence 2 saal',lang:'Basic English',qual:'LMV licence',desc:'City me parcel delivery, van chalana.',contact:'',demo:1},
+ {id:'s7',region:'abroad',title:'IT Support Executive',company:'TechNova Solutions',cat:'it',city:'Singapore',place:'Singapore',salary:'SGD 2,600 / month',posted:'3d ago',last:'15 Dec 2026',fee:'₹5,000 (Agency Fee)',permit:'notmentioned',visa:'Post me likha nahi',accom:'Not provided',food:'Not provided',exp:'1-2 years IT support',lang:'English zaroori',qual:'Diploma / ITI',desc:'Office computers aur network ki chhoti problems theek karna.',contact:'Email: hr@technova-demo.example',demo:1},
+ {id:'s8',region:'india',title:'Computer Operator',company:'Sharma Enterprises',cat:'office',city:'Karnal',place:'Haryana',salary:'₹22,000 / month',posted:'3h ago',last:'12 Nov 2026',fee:'',permit:'na',visa:'—',accom:'—',food:'—',exp:'1 year',lang:'Hindi / English',qual:'12th + computer course',desc:'Billing aur data entry ka kaam, Tally ka basic gyaan.',contact:'WhatsApp: demo number (test)',demo:1},
+ {id:'s9',region:'india',title:'Office Assistant',company:'Delhi Traders Pvt Ltd',cat:'office',city:'Delhi',place:'Delhi',salary:'₹25,000 / month',posted:'6h ago',last:'14 Nov 2026',fee:'',permit:'na',visa:'—',accom:'—',food:'—',exp:'Fresher chalega',lang:'Hindi',qual:'12th pass',desc:'Office file work, phone par baat aur data sambhalna.',contact:'',demo:1},
+ {id:'s10',region:'india',title:'Sales Executive',company:'Punjab Motors',cat:'sales',city:'Ludhiana',place:'Punjab',salary:'₹28,000 / month + Incentive',posted:'1d ago',last:'16 Nov 2026',fee:'',permit:'na',visa:'—',accom:'—',food:'—',exp:'1 year sales',lang:'Punjabi / Hindi',qual:'12th pass',desc:'Showroom me customer ko gaadi dikhana aur sale me madad.',contact:'',demo:1},
+ {id:'s11',region:'india',title:'Housekeeping Staff',company:'City Mall',cat:'cleaner',city:'Chandigarh',place:'Chandigarh',salary:'₹16,000 / month',posted:'1d ago',last:'13 Nov 2026',fee:'',permit:'na',visa:'—',accom:'Not provided',food:'Provided',exp:'Not required',lang:'Hindi',qual:'Koi khaas nahi',desc:'Mall ki safai aur housekeeping ka kaam, 8 ghante duty.',contact:'',demo:1},
+ {id:'s12',region:'india',title:'Delivery Driver',company:'UP Logistics',cat:'delivery',city:'Lucknow',place:'UP',salary:'₹24,000 / month',posted:'2d ago',last:'19 Nov 2026',fee:'',permit:'na',visa:'—',accom:'—',food:'—',exp:'LMV licence 1 saal',lang:'Hindi',qual:'LMV licence',desc:'Sheher me saman ki delivery, chhota vehicle chalana.',contact:'',demo:1}
+];
+function LS(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function SS(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function allJobs(){
+  var deleted=LS('rj_deleted',[]),custom=LS('rj_custom',[]);
+  var base=SEED.filter(function(j){return deleted.indexOf(j.id)<0});
+  return custom.concat(base);
+}
+var state={region:'abroad',cat:'all',place:'all',visaOnly:false,q:'',detailId:null};
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function permitBadge(j){
+  if(j.region==='india')return '';
+  if(j.permit==='yes')return '<span class="bdg g">✓ Work Permit Help: YES</span>';
+  if(j.permit==='no')return '<span class="bdg r">Work Permit Help: NO</span>';
+  return '<span class="bdg gr">Work Permit Help: Likha Nahi</span>';
+}
+function feeBadge(j){
+  if(j.fee)return '<span class="bdg o">⚠ Fee: '+esc(j.fee)+'</span>';
+  return '<span class="bdg b">ℹ No Apply Fee</span>';
+}
+</script>
+<script>
+function savedIds(){return LS('rj_saved',[])}
+function isSaved(id){return savedIds().indexOf(id)>=0}
+function toggleSave(id,ev){if(ev)ev.stopPropagation();var s=savedIds();var i=s.indexOf(id);if(i>=0)s.splice(i,1);else s.push(id);SS('rj_saved',s);renderFeed();renderSaved();}
+function cardHTML(j){
+  var sv=isSaved(j.id);
+  return '<div class="card" onclick="openDetail(\''+j.id+'\')">'
+   +'<button class="save'+(sv?' on':'')+'" onclick="toggleSave(\''+j.id+'\',event)">'+(sv?'🔖':'🔖')+'</button>'
+   +'<h3>'+esc(j.title)+(j.demo?' <span class="bdg gr" style="font-size:10.5px;vertical-align:middle">TEST JOB</span>':'')+'</h3>'
+   +'<div class="comp">'+esc(j.company)+'</div>'
+   +'<div class="loc">📍 '+esc(j.city)+', '+esc(j.place)+'</div>'
+   +(j.salary?'<div class="sal">💰 '+esc(j.salary)+'</div>':'<div class="sal" style="color:var(--grey)">Salary likhi nahi</div>')
+   +'<div class="meta"><span>🕐 Posted: '+esc(j.posted||'—')+'</span><span>📅 Last date: '+esc(j.last||'—')+'</span></div>'
+   +'<div class="badges">'+permitBadge(j)+feeBadge(j)+'</div></div>';
+}
+function catName(id){for(var i=0;i<CATS.length;i++)if(CATS[i].id===id)return CATS[i].name;return id}
+function renderCats(){
+  var h='';CATS.forEach(function(c){
+    h+='<button class="cat'+(state.cat===c.id?' on':'')+'" onclick="setCat(\''+c.id+'\')"><span class="ic">'+c.icon+'</span><span>'+c.name+'</span></button>';
+  });
+  document.getElementById('cats').innerHTML=h;
+  var sel=document.getElementById('aj-cat');
+  if(sel&&!sel.options.length){CATS.slice(1).forEach(function(c){var o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);});}
+}
+function renderPlaces(){
+  var sel=document.getElementById('placeSel');
+  var jobs=allJobs().filter(function(j){return j.region===state.region});
+  var places=[];jobs.forEach(function(j){if(places.indexOf(j.place)<0)places.push(j.place)});
+  places.sort();
+  var h='<option value="all">'+(state.region==='india'?'All States':'All Countries')+'</option>';
+  places.forEach(function(p){h+='<option value="'+esc(p)+'"'+(state.place===p?' selected':'')+'>'+esc(p)+'</option>'});
+  sel.innerHTML=h;
+  if(state.place!=='all'&&places.indexOf(state.place)<0)state.place='all';
+}
+function filteredJobs(){
+  return allJobs().filter(function(j){
+    if(j.region!==state.region)return false;
+    if(state.cat!=='all'&&j.cat!==state.cat)return false;
+    if(state.place!=='all'&&j.place!==state.place)return false;
+    if(state.visaOnly&&j.permit!=='yes')return false;
+    if(state.q){var t=(j.title+' '+j.company+' '+j.city+' '+j.place+' '+catName(j.cat)).toLowerCase();if(t.indexOf(state.q)<0)return false;}
+    return true;
+  });
+}
+function renderFeed(){
+  renderCats();renderPlaces();
+  var jobs=filteredJobs();
+  document.getElementById('feedTitle').textContent=state.cat==='all'?'Latest Jobs':catName(state.cat)+' Jobs';
+  document.getElementById('feedCnt').textContent=jobs.length+' jobs';
+  var f=document.getElementById('feed');
+  f.innerHTML=jobs.length?jobs.map(cardHTML).join(''):'<div class="empty">Is filter me koi job nahi mili.<br>Category ya country badal kar dekho.</div>';
+}
+function renderSaved(){
+  var s=savedIds();var jobs=allJobs().filter(function(j){return s.indexOf(j.id)>=0});
+  document.getElementById('savedFeed').innerHTML=jobs.length?jobs.map(cardHTML).join(''):'<div class="empty">Abhi koi job save nahi ki.<br>Job card par 🔖 dabane se yahan aayegi.</div>';
+}
+function show(name){
+  var views=['home','saved','detail','apply','success','myapply','more','addjob','received'];
+  views.forEach(function(v){document.getElementById('v-'+v).classList.toggle('on',v===name)});
+  var navMap={home:'home',saved:'saved',myapply:'myapply',more:'more',addjob:'more',received:'more'};
+  var nb=document.querySelectorAll('#bottomNav button');
+  nb.forEach(function(b){b.classList.toggle('on',navMap[name]===b.getAttribute('data-nav'))});
+  document.getElementById('bottomNav').style.display=(name==='detail'||name==='apply')?'none':'flex';
+  window.scrollTo(0,0);
+}
+function openDetail(id){
+  state.detailId=id;
+  var j=null;allJobs().forEach(function(x){if(x.id===id)j=x});if(!j)return;
+  var pr=j.region==='india'
+    ?'<div class="row"><span class="k">Work Permit / Visa</span><span class="v">India ki job — lagu nahi</span></div>'
+    :'<div class="row"><span class="k">Work Permit Help</span><span class="v '+(j.permit==='yes'?'yes':'')+'">'+(j.permit==='yes'?'YES':(j.permit==='no'?'NO':'Post me likha nahi'))+'</span></div>'
+     +'<div class="row"><span class="k">Visa Sponsorship</span><span class="v">'+esc(j.visa||'—')+'</span></div>';
+  document.getElementById('detailBody').innerHTML=
+    '<h1>'+esc(j.title)+(j.demo?' <span class="bdg gr" style="font-size:11px;vertical-align:middle">TEST JOB</span>':'')+'</h1>'
+   +'<div class="comp" style="font-size:15.5px;margin-top:4px">🏢 '+esc(j.company)+'</div>'
+   +'<div class="loc" style="font-size:15px">📍 '+esc(j.city)+', '+esc(j.place)+'</div>'
+   +'<div class="salbox"><div class="s">'+(j.salary?esc(j.salary):'Salary likhi nahi — confirm karni hai')+'</div><div class="t">'+esc(catName(j.cat))+' • '+esc(j.exp||'')+'</div></div>'
+   +'<h4 class="sec">Job Information</h4><div class="rows">'
+   +'<div class="row"><span class="k">Posted</span><span class="v">'+esc(j.posted||'—')+'</span></div>'
+   +'<div class="row"><span class="k">Last date to apply</span><span class="v">'+esc(j.last||'—')+'</span></div>'
+   +'<div class="row"><span class="k">Apply Fee</span><span class="v '+(j.fee?'warn':'yes')+'">'+(j.fee?esc(j.fee):'None')+'</span></div>'
+   +pr
+   +'<div class="row"><span class="k">Accommodation (Rehna)</span><span class="v">'+esc(j.accom||'—')+'</span></div>'
+   +'<div class="row"><span class="k">Food (Khana)</span><span class="v">'+esc(j.food||'—')+'</span></div>'
+   +'<div class="row"><span class="k">Experience</span><span class="v">'+esc(j.exp||'—')+'</span></div>'
+   +'<div class="row"><span class="k">Language</span><span class="v">'+esc(j.lang||'—')+'</span></div>'
+   +'<div class="row"><span class="k">Qualification</span><span class="v">'+esc(j.qual||'—')+'</span></div></div>'
+   +'<h4 class="sec">Kaam Ki Detail</h4><p class="desc">'+esc(j.desc||'')+'</p>'
+   +(j.contact?'<div class="contactbox"><b>Seedha Sampark (asli post se):</b><br>'+esc(j.contact)+'</div>':'')
+   +(j.fee?'<div class="warnstrip">⚠️ Is job me fee likhi hai. Bina poori jaanch kiye kisi ko bhi fee mat do — fee mangne wali job scam bhi ho sakti hai.</div>':'<div class="warnstrip">⚠️ Savdhaan: bina check kiye kisi agent ko fee kabhi mat do.</div>');
+  document.getElementById('applyBar').innerHTML='<button class="bigbtn" onclick="openApply()">APPLY NOW</button>';
+  show('detail');
+}
+function openApply(){
+  var j=null;allJobs().forEach(function(x){if(x.id===state.detailId)j=x});if(!j)return;
+  document.getElementById('applyJobMini').innerHTML='<b>'+esc(j.title)+'</b><div>'+esc(j.company)+' • '+esc(j.city)+', '+esc(j.place)+'</div><div>'+(j.salary?esc(j.salary):'Salary likhi nahi')+'</div>';
+  show('apply');
+}
+function setCat(id){state.cat=id;renderFeed();}
+document.getElementById('tab-india').onclick=function(){state.region='india';state.place='all';this.classList.add('on');document.getElementById('tab-abroad').classList.remove('on');renderFeed();};
+document.getElementById('tab-abroad').onclick=function(){state.region='abroad';state.place='all';this.classList.add('on');document.getElementById('tab-india').classList.remove('on');renderFeed();};
+document.getElementById('placeSel').onchange=function(){state.place=this.value;renderFeed();};
+document.getElementById('visaChip').onclick=function(){state.visaOnly=!state.visaOnly;this.classList.toggle('on',state.visaOnly);renderFeed();};
+document.getElementById('q').addEventListener('input',function(){state.q=this.value.trim().toLowerCase();renderFeed();});
+document.querySelectorAll('#bottomNav button').forEach(function(b){b.onclick=function(){var n=b.getAttribute('data-nav');if(n==='myapply')renderMy();show(n);if(n==='saved')renderSaved();if(n==='home')renderFeed();};});
+document.querySelectorAll('[data-go]').forEach(function(b){b.onclick=function(){var g=b.getAttribute('data-go');if(g==='detail'&&state.detailId)openDetail(state.detailId);else show(g);};});
+document.getElementById('af-upload').onclick=function(){document.getElementById('af-file').click();};
+document.getElementById('af-file').onchange=function(){if(this.files.length)document.getElementById('af-filename').textContent='Chuni gayi file: '+this.files[0].name;};
+document.getElementById('applyForm').onsubmit=function(e){
+  e.preventDefault();
+  var j=null;allJobs().forEach(function(x){if(x.id===state.detailId)j=x});if(!j)return;
+  var apps=LS('rj_apps',[]);
+  apps.unshift({jobId:j.id,jobTitle:j.title,company:j.company,place:j.city+', '+j.place,name:document.getElementById('af-name').value,mobile:document.getElementById('af-mobile').value,city:document.getElementById('af-city').value,exp:document.getElementById('af-exp').value,resume:(document.getElementById('af-file').files.length?document.getElementById('af-file').files[0].name:''),when:new Date().toLocaleString('en-IN')});
+  SS('rj_apps',apps);
+  document.getElementById('successText').innerHTML='<b>'+esc(j.title)+'</b> ('+esc(j.company)+') ke liye tumhari application save ho gayi hai.<br><br>Test version me ye application is phone me hi rehti hai — "My Apply" me kabhi bhi dekh sakte ho.';
+  this.reset();document.getElementById('af-filename').textContent='';
+  show('success');
+};
+function renderMy(){
+  var apps=LS('rj_apps',[]);
+  document.getElementById('applyList').innerHTML=apps.length?apps.map(function(a){
+    return '<div class="appitem"><b>'+esc(a.jobTitle)+'</b> — '+esc(a.company)+'<br>📍 '+esc(a.place)+'<br>👤 '+esc(a.name)+' • '+esc(a.mobile)+'<br>🕐 '+esc(a.when)+'</div>';
+  }).join(''):'<div class="empty">Abhi koi application nahi bheji.<br>Home se kisi job par Apply karo.</div>';
+}
+document.getElementById('goAddJob').onclick=function(){renderAdminJobs();show('addjob');};
+document.getElementById('goReceived').onclick=function(){
+  var apps=LS('rj_apps',[]);
+  document.getElementById('receivedList').innerHTML=apps.length?apps.map(function(a){
+    return '<div class="appitem"><b>'+esc(a.name)+'</b> — '+esc(a.jobTitle)+'<br>🏢 '+esc(a.company)+' • 📍 '+esc(a.place)+'<br>📱 '+esc(a.mobile)+' • 🏠 '+esc(a.city)+'<br>Experience: '+esc(a.exp)+(a.resume?'<br>Resume: '+esc(a.resume):'')+'<br>🕐 '+esc(a.when)+'</div>';
+  }).join(''):'<div class="empty">Abhi koi application nahi aayi.</div>';
+  show('received');
+};
+document.getElementById('resetDemo').onclick=function(){
+  if(confirm('Test data reset karein? Dali hui jobs, saved aur applications sab saaf ho jayengi.')){
+    ['rj_custom','rj_deleted','rj_saved','rj_apps'].forEach(function(k){localStorage.removeItem(k)});
+    renderFeed();alert('Reset ho gaya. Demo jobs wapas aa gayi hain.');show('home');
+  }
+};
+document.getElementById('addForm').onsubmit=function(e){
+  e.preventDefault();
+  var custom=LS('rj_custom',[]);
+  var j={id:'c'+Date.now(),region:document.getElementById('aj-region').value,
+    title:document.getElementById('aj-title').value,company:document.getElementById('aj-company').value,
+    cat:document.getElementById('aj-cat').value,city:document.getElementById('aj-city').value,
+    place:document.getElementById('aj-place').value,salary:document.getElementById('aj-salary').value,
+    posted:'Abhi (just now)',last:document.getElementById('aj-last').value,fee:document.getElementById('aj-fee').value,
+    permit:document.getElementById('aj-permit').value,visa:document.getElementById('aj-permit').value==='yes'?'Help Available':(document.getElementById('aj-permit').value==='no'?'Nahi milegi':'Post me likha nahi'),
+    accom:'—',food:'—',exp:'—',lang:'—',qual:'—',
+    desc:document.getElementById('aj-desc').value,contact:document.getElementById('aj-contact').value,demo:0};
+  custom.unshift(j);SS('rj_custom',custom);
+  state.region=j.region;
+  document.getElementById('tab-india').classList.toggle('on',j.region==='india');
+  document.getElementById('tab-abroad').classList.toggle('on',j.region==='abroad');
+  this.reset();renderAdminJobs();renderFeed();
+  alert('Job add ho gayi! Home page par sabse upar dikhegi.');
+  show('home');
+};
+function renderAdminJobs(){
+  var jobs=allJobs();
+  document.getElementById('adminJobList').innerHTML=jobs.map(function(j){
+    return '<div class="appitem"><button class="del" onclick="deleteJob(\''+j.id+'\')">🗑 Hatao</button><b>'+esc(j.title)+'</b> — '+esc(j.company)+'<br>📍 '+esc(j.city)+', '+esc(j.place)+(j.demo?' • TEST JOB':'')+'</div>';
+  }).join('');
+}
+function deleteJob(id){
+  if(!confirm('Ye job hatani hai?'))return;
+  if(id.charAt(0)==='c'){var cu=LS('rj_custom',[]).filter(function(j){return j.id!==id});SS('rj_custom',cu);}
+  else{var d=LS('rj_deleted',[]);d.push(id);SS('rj_deleted',d);}
+  renderAdminJobs();renderFeed();
+}
+renderFeed();
+</script>
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.protocol === 'http:')) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+</script>
+</body>
+</html>
