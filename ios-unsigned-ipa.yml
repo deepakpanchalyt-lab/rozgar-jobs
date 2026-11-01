@@ -1,0 +1,63 @@
+# Rozgar Jobs - FREE iPhone app (IPA) build
+# GitHub ka muft Mac computer is file ko chala kar hamari app ki iPhone wali
+# file (IPA) banata hai. Ye IPA bina-sign ki hoti hai; iPhone par install
+# karte waqt SideStore app use muft Apple ID se sign kar deti hai.
+# Chalane ka tareeka: GitHub repo me "Actions" tab -> "Build iPhone App (Free)"
+# -> "Run workflow". Kuch minutes me IPA neeche "Artifacts" me mil jayegi.
+name: Build iPhone App (Free)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-ipa:
+    runs-on: macos-14
+    steps:
+      - name: Code lena
+        uses: actions/checkout@v4
+
+      - name: Node lagana
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Packages install
+        run: npm install
+
+      - name: Icon banana (base64 se asli PNG)
+        run: bash scripts/gen-icons.sh
+
+      - name: iOS project banana
+        run: npx cap add ios
+
+      - name: Apna icon iOS project me lagana
+        run: cp scripts/icon-1024.png ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png
+
+      - name: Web code ko iOS project me dalna
+        run: npx cap sync ios
+
+      - name: iPhone app banana (bina sign ke)
+        run: |
+          xcodebuild build \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+
+      - name: IPA file pack karna
+        run: |
+          rm -rf Payload RozgarJobs-unsigned.ipa
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -qry RozgarJobs-unsigned.ipa Payload
+
+      - name: IPA download ke liye rakhna
+        uses: actions/upload-artifact@v4
+        with:
+          name: RozgarJobs-iPhone-IPA
+          path: RozgarJobs-unsigned.ipa
+          retention-days: 30
