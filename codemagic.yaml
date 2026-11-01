@@ -1,0 +1,44 @@
+# Rozgar Jobs - iOS build recipe for a cloud Mac (Codemagic)
+# Ye file cloud-Mac service ko batati hai ki iPhone wali app (IPA) kaise banani hai
+# aur TestFlight par kaise bhejni hai.
+# Deepak ko sirf 2 cheezein karni hongi:
+#   1) Apple Developer account (apni Apple ID se, $99/saal)
+#   2) Codemagic me us account ko ek baar jodna (App Store Connect integration)
+# Uske baad build ek click par hoga.
+workflows:
+  ios-testflight:
+    name: Rozgar Jobs iOS - TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: RozgarAppleConnect   # <-- Codemagic me banaye gaye integration ka naam yahan ayega
+    environment:
+      vars:
+        XCODE_PROJECT: "ios/App/App.xcodeproj"
+        XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.rozgarjobs.app"
+      node: 20
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install npm packages
+        script: |
+          npm install
+      - name: Capacitor sync (web code ko iOS project me dalna)
+        script: |
+          npx cap sync ios
+      - name: Certificates aur profile lagana
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_DEVELOPMENT --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: IPA banana
+        script: |
+          xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
